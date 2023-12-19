@@ -1,25 +1,16 @@
-import { Pool, Client } from "pg";
+import pkg from "pg";
+const { Client } = pkg;
 
-const pool = new Pool({
-    user: "postgres",
-    host: "localhost",
-    database: "ecommerce_app",
-    password: "postgres",
-    port: "5432"
+const client = new Client({
+    user: 'postgres',
+    host: 'localhost',
+    database: 'ecommerce_app',
+    password: 'postgres',
+    port: '5432'
 });
 
-console.log(await pool.query("SELECT NOW()"));
+await client.connect();
 
-const Client = new Client({
-    user: "postgres",
-    host: "postgres",
-    database: "ecommerce_app",
-    password: "postgres",
-    port: "5432"
-});
+console.log(await client.query("SELECT * FROM products"));
 
-await Client.connect();
-
-console.log(await Client.query("SELECT NOW()"));
-
-await Client.end();
+await client.end();
