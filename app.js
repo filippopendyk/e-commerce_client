@@ -1,11 +1,27 @@
 const express = require("express");
-const app = express();
 const port = 3000;
+const app = express();
+const db = require('./db/index');
+const bodyParser = require("body-parser");
+const router = require('express').Router();
+const register = require('./register');
+const auth = require('./auth');
+const passport = require('passport')
+const session = require("express-session");
+
+app.use(bodyParser.json())
+app.use(
+    bodyParser.urlencoded({
+        extended: true,
+    })
+);
 
 app.get('/', (req, res) => {
-    res.send("Hello World!")
-    
+    res.send("Hello World!")  
 })
+
+app.use('/register', register);
+app.use('/auth', auth);
 
 /*
 
