@@ -1,13 +1,12 @@
 const express = require("express");
 const port = 3000;
 const app = express();
-const db = require('./db/index');
 const bodyParser = require("body-parser");
-const router = require('express').Router();
 const register = require('./register');
 const auth = require('./auth');
-const passport = require('passport')
-const session = require("express-session");
+// import passport from "passport";
+// import session from "express-session";
+const db = require('./db/index');
 
 app.use(bodyParser.json())
 app.use(
@@ -15,6 +14,19 @@ app.use(
         extended: true,
     })
 );
+
+// app.use(express.json());
+// app.use(session({
+//     secret: "",
+//     saveUninitialized: false,
+//     resave: false,
+//     cookie: {
+//         maxAge: 60000 * 60,
+//     }
+// }));
+
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 app.get('/', (req, res) => {
     res.send("Hello World!")  
@@ -47,4 +59,5 @@ app.use('/auth', auth);
 
 app.listen(port, () => {
     console.log(`App listening on port ${port}`);
+    db.selectUserDetails("kot123", "doopcia");
 })

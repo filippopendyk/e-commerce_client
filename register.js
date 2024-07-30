@@ -10,7 +10,7 @@ router.use((req, res, next) => {
 router.post('/', async (req, res) => {
     const { username, password, email } = req.query;
 
-    const data = await db.selectUser(email);
+    const data = await db.selectUser(username);
     const arr = data.rows;
 
     if(arr.length != 0){

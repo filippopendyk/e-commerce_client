@@ -1,6 +1,7 @@
 const Pool = require('pg').Pool;
 const { v4: uuidv4 } = require("uuid");
-const { hashPassword } = require('../helpers');
+const { hashPassword, comparePasswords } = require('../helpers');
+const { use } = require('passport');
 
 const pool = new Pool({
     user: 'postgres',
@@ -27,17 +28,55 @@ const createUser = async (username, password, email) => {
     return "Successfully registered an user!";
 }
 
-const selectUser = async (email) => {
+const selectUser = async (username) => {
     let selectQuery = {
         name: 'select-user',
-        text: 'SELECT * FROM users WHERE email = $1',
-        values: [email]
+        text: 'SELECT * FROM users WHERE username = $1',
+        values: [username]
     }
     const res = await pool.query(selectQuery);
     return res;
 }
 
+const selectUserDetails = async (username, password) => {
+    try {
+        // Select the user details based on the username
+        let selectUserDetailsQuery = {
+            name: 'select-user-details',
+            text: 'SELECT * FROM users WHERE username = $1',
+            values: [username]
+        };
+        
+        const res = await pool.query(selectUserDetailsQuery);
+        
+        // Check if any rows were returned
+        if (res.rows.length > 0) {
+            const userDetails = res.rows[0];
+            const storedPasswordHash = userDetails.password_hash;
+
+            // Compare the provided password with the stored hashed password
+            const isPasswordValid = await comparePasswords(password, storedPasswordHash);
+            
+            if (isPasswordValid) {
+                console.log('Username:', userDetails.username);
+                return userDetails;
+            } else {
+                console.log('Invalid password');
+                return null;
+            }
+        } else {
+            console.log('No user found with the provided username.');
+            return null;
+        }
+    } catch (error) {
+        // Handle any errors that occur during the process
+        console.error('Error executing query:', error);
+        throw error;
+    }
+};
+
 module.exports = {
     createUser,
     selectUser,
+    selectUserDetails
 }
