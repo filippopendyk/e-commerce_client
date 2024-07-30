@@ -5,15 +5,19 @@ const passport = require("passport");
 require("./passportConfig")(passport);
 
 router.use((req, res, next) => {
-    console.log("You successfully accessed auth router");
     next();
 });
 
-router.post('/login', passport.authenticate("local-login", {session: false}), (req, res, next) => {
-    // const { username, password, email } = req.query;
-    // console.log(username, password, email);
-    // res.status(201).send("Successfully posted user to authenticate");
-    res.json({user: req.user});
+router.post('/login', passport.authenticate("local"), (req, res) => {
+    res.sendStatus(200);
+})
+
+router.get("/status", (req, res) => {
+    console.log("Inside status endpoint");
+    console.log(req.user);
+    console.log(req.session);
+    if(req.user) return res.send(req.user);
+    return res.sendStatus(401);
 })
 
 module.exports = router;

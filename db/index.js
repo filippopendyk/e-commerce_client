@@ -58,7 +58,6 @@ const selectUserDetails = async (username, password) => {
             const isPasswordValid = await comparePasswords(password, storedPasswordHash);
             
             if (isPasswordValid) {
-                console.log('Username:', userDetails.username);
                 return userDetails;
             } else {
                 console.log('Invalid password');

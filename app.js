@@ -4,11 +4,17 @@ const app = express();
 const bodyParser = require("body-parser");
 const register = require('./register');
 const auth = require('./auth');
-const db = require('./db/index');
+const db = require('./db/index'); 
 const passport = require("passport");
 const session = require("express-session");
 
-app.use(bodyParser.json())
+// Use dynamic import for ES module
+const loadLocalStrategy = async () => {
+    const localStrategy = await import("./strategies/local-strategy.mjs");
+    localStrategy.default; 
+};
+
+app.use(bodyParser.json());
 app.use(
     bodyParser.urlencoded({
         extended: true,
@@ -29,17 +35,16 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.get('/', (req, res) => {
-    res.send("Hello World!")  
-})
+    res.send("Hello World!");
+});
 
 app.use('/register', register);
 app.use('/auth', auth);
 
 /*
-
     ENDPOINTS 
 
-    /register - used for registering an user
+    /register - used for registering a user
 
     /login - used for login
 
@@ -54,10 +59,10 @@ app.use('/auth', auth);
     /carts - used for retrieving all carts data
 
     /carts/id - used for retrieving specific cart data
-
 */
 
-app.listen(port, () => {
+app.listen(port, async () => {
     console.log(`App listening on port ${port}`);
+    await loadLocalStrategy(); 
     db.selectUserDetails("kot123", "doopcia");
-})
+});
