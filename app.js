@@ -4,9 +4,9 @@ const app = express();
 const bodyParser = require("body-parser");
 const register = require('./register');
 const auth = require('./auth');
-// import passport from "passport";
-// import session from "express-session";
 const db = require('./db/index');
+const passport = require("passport");
+const session = require("express-session");
 
 app.use(bodyParser.json())
 app.use(
@@ -15,18 +15,18 @@ app.use(
     })
 );
 
-// app.use(express.json());
-// app.use(session({
-//     secret: "",
-//     saveUninitialized: false,
-//     resave: false,
-//     cookie: {
-//         maxAge: 60000 * 60,
-//     }
-// }));
+app.use(express.json());
+app.use(session({
+    secret: "filippopendyk",
+    saveUninitialized: false,
+    resave: false,
+    cookie: {
+        maxAge: 60000 * 60,
+    }
+}));
 
-// app.use(passport.initialize());
-// app.use(passport.session());
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.get('/', (req, res) => {
     res.send("Hello World!")  
