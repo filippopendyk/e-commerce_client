@@ -4,9 +4,11 @@ const app = express();
 const bodyParser = require("body-parser");
 const register = require('./register');
 const auth = require('./auth');
+const products = require("./products");
 const db = require('./db/index'); 
 const passport = require("passport");
 const session = require("express-session");
+const { isAuthenticated } = require('./helpers');
 
 // Use dynamic import for ES module
 const loadLocalStrategy = async () => {
@@ -40,6 +42,7 @@ app.get('/', (req, res) => {
 
 app.use('/register', register);
 app.use('/auth', auth);
+app.use('/products', products);
 
 /*
     ENDPOINTS 
@@ -64,5 +67,4 @@ app.use('/auth', auth);
 app.listen(port, async () => {
     console.log(`App listening on port ${port}`);
     await loadLocalStrategy(); 
-    db.selectUserDetails("kot123", "doopcia");
 });

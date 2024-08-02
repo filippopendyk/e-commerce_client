@@ -20,7 +20,16 @@ const comparePasswords = async (password, hash) => {
     return false
 };
 
+const isAuthenticated = (req, res, next) => {
+    if(req.user){
+        next();
+    } else {
+        res.redirect("/login");
+    }
+};
+
 module.exports = {
     hashPassword,
-    comparePasswords
+    comparePasswords,
+    isAuthenticated
 };
